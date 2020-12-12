@@ -1,0 +1,18 @@
+{
+  "name": "cross-world",
+  "version": "0.0.1",
+  "description": "在一个开放的世界中漫游、聊天。",
+  "scripts": {
+    "start": "start http://localhost:8080/index.html && server 8080",
+    "build": "webpack"
+  },
+  "private": true,
+  "author": "Chiro",
+  "license": "MIT",
+  "dependencies": {
+    "@tweenjs/tween.js": "^18.6.4",
+    "dat.gui": "^0.7.7",
+    "jquery": "^3.5.1",
+    "stats.js": "^0.17.0"
+  }
+}
