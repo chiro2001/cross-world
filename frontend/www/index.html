@@ -6,20 +6,23 @@
   <title>Cross World</title>
   
   <style>
-    @import url(./css/index.css);
+    @import url(/frontend/www/css/index.css);
   </style>
   <!-- <script src="vector/requirejs/2.3.6/require.js"></script> -->
-  <script src="vector/jquery/3.5.1/jquery.js"></script>
-  <script type="module" src="js/index.js"></script>
+  <script src="/frontend/www/vector/jquery/3.5.1/jquery.js"></script>
+  <script src="/frontend/www/utils/utils.js"></script>
+  <script type="module" src="/frontend/www/js/index.js"></script>
 </head>
 
 <body>
+  <br /><br />
   <h2>Cross World</h2>
-  <button id="btn-enter">进入游戏</button>
+  <button id="btn-enter">进入游戏</button><br />
+  <button id="btn-render-start">开始</button><button id="btn-render-stop">停止</button>
   <br />
   <br />
-  <div id="world">
-
+  <div>
+    <div id="world"></div>
   </div>
 </body>
 

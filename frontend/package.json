@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "在一个开放的世界中漫游、聊天。",
   "scripts": {
-    "start_server": "start http://localhost:8080/index.html && server 8080"
+    "start_server": "cd .. && start http://localhost:8080/frontend/www/index.html && serve -l 8080"
   },
   "private": true,
   "author": "Chiro",

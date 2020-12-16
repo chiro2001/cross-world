@@ -47,7 +47,8 @@
       4. 管理员
       5. 站长
    2. 按照编号分配等级
-   3. 权限
+   3. 权限管理
+      1. 只有上层MOD需要校验权限
 8. MODS
    1. MOD加载系统
       1. 通过`websocket`服务器传输mod，游戏整体静态文件不变
@@ -61,17 +62,20 @@
          3. 每个环节接触到的是上一个环节的数据
       2. 前端
          1. 格式：module，可import
-         2. 包含：
+         2. 依赖
+            1. 用`import`方式加载依赖
+            2. catch
+         3. 包含：
             1. 钩子：直接监听事件
                1. on load
                2. on receive
                3. on render
-               4. on input
+               4. on keydown
                5. ...
             2. 版本...等信息
       3. 文件
-         1. `mod/xxx/xxx_frontend.mjs`
-         2. `mod/xxx/xxx_backend.mjs`
+         1. `mod/xxx/frontend/xxx.mjs`
+         2. `mod/xxx/backend/xxx.mjs`
    3. 基础MOD
       1. `TAG`MOD
          1. `TAG`可以作为MOD存在
@@ -94,6 +98,32 @@
          2. 月亮
       2. 时间系统
 
+### 运行流程
+
+**前端**：
+
+```mermaid
+graph TB
+	subgraph 初始化环境
+		subgraph main内容
+			init_main --- init_world(初始化World)
+			init_main --- init_mods(初始化Mods)
+			init_main --- init_motions(初始化Motions)
+			init_main --- init_pages(处理页面)
+		end
+		subgraph onInit内容
+			onInit_events[触发各种MOD注册的onInit事件]
+		end
+		subgraph mods内容
+			mods_fetch(获取需要加载的Mods信息) --- mods_load(加载mod)
+			mods_load --- mods_load_events(加载到事件监听列表)
+			mods_update_info(获取到更新mods的指令) --- mods_update(mods更新)
+		end
+	end
+```
+
+
+
 ## 开发流程
 
 1. 可行性验证
@@ -109,16 +139,21 @@
      - [x] 指针锁定
      - [ ] 摄像头控制
    - [x] `WebSocket`
-   - [ ] 构建场景
-     - [ ] 设置光照
-     - [ ] 增加实体
+   - [x] 构建场景
+     - [x] 设置光照
+     - [x] 增加实体
 2. 前端
    - [ ] 项目框架
      - [x] 图形渲染框架
+     - [x] 事件监听框架
+     - [ ] 动作控制框架
+     - [ ] MOD加载框架
    - [ ] 构建场景
-   - [ ] 开发消息系统
    - [ ] MOD系统
+     - [ ] MOD BASE
+       - [ ] 
 3. 后端
    - [ ] NodeJS框架
    - [ ] `WebSocket`
-   - [ ] MOD框架
+   - [ ] MOD系统
+

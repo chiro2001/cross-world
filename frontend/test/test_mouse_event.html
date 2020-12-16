@@ -1,0 +1,27 @@
+<html style="width: 100%; height: 100%">
+
+<head>
+</head>
+
+<body style="width: 100%; height: 100%">
+  <p>鼠标事件</p>
+  <input type="text" id="text" />
+  <script>
+    var p1 = document.getElementsByTagName("p")[0];  //获取段落文本的引用指针
+    var t = document.getElementById("text");  //获取文本框的指针引用
+    function f() {  //事件侦测函数
+      var event = event || window.event;  //标准化事件对象
+      t.value = (event.type);  //获取当前事件类型
+      console.log(t.value);
+    }
+    p1.onmouseover = f;  //注册鼠标经过时事件处理函数
+    p1.onmouseout = f;  //注册鼠标移开时事件处理函数
+    p1.onmousedown = f;  //注册鼠标按下时事件处理函数
+    p1.onmouseup = f;  //注册鼠标松开时事件处理函数
+    p1.onmousemove = f;  //注册鼠标移动时事件处理函数
+    p1.onclick = f;  //注册鼠标单击时事件处理函数
+    p1.ondblclick = f;  //注册鼠标双击时事件处理函数
+  </script>
+</body>
+
+</html>
