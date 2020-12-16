@@ -27,7 +27,8 @@ export class Scene {
     let k = width / height; //窗口宽高比
     let s = 500; //三维场景显示范围控制系数，系数越大，显示的范围越大
     //创建相机对象
-    this.camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
+    // this.camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
+    this.camera = new THREE.PerspectiveCamera(50, k, 1, 10000);
     this.camera.position.set(200, 500, 200); //设置相机位置
     this.camera.lookAt(this.scene.position); //设置相机方向(指向的场景对象)
     this.renderer.setSize(width, height);
