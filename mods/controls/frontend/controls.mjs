@@ -1,4 +1,5 @@
 import ModBase from "../../base/frontend/base.mjs";
+import * as THREE from "../../../frontend/www/vector/threejs/R123/three.module.js";
 export default class extends ModBase {
   modName = 'Controls';
   version = "0.0.1";
@@ -33,6 +34,8 @@ export default class extends ModBase {
     if (!this.trackStart) return;
     this.x += dx / (Math.PI * 300);
     this.y += dy / (Math.PI * 300);
+    if (this.y <= THREE.MathUtils.degToRad(0)) this.y = THREE.MathUtils.degToRad(0);
+    if (this.y >= THREE.MathUtils.degToRad(180)) this.y = THREE.MathUtils.degToRad(180);
     // console.log(this.x, this.y);
     main.scene.cameraRoll.set(this.x, this.y);
     // main.scene.cameraRoll.set(dx, dy);
@@ -44,6 +47,9 @@ export default class extends ModBase {
   }
 
   onKeyDown(e) {
+    if (e.code === 'KeyF') {
+      if (!this.trackStart) $("#btn-enter").click();
+    }
     if (!this.trackStart) return;
     console.log(e);
     if (e.code === 'KeyW') this.pressed.w = true;
@@ -84,18 +90,26 @@ export default class extends ModBase {
     //   main.scene.cameraPositionA.x += Math.cos(this.x) * this.sensitivity;
     // if (this.pressed.a) main.scene.cameraPositionA.z += Math.sin(this.x) * this.sensitivity,
     //   main.scene.cameraPositionA.x -= Math.cos(this.x) * this.sensitivity;
-    if (this.pressed.d) main.scene.cameraPositionA.z -= Math.cos(this.x) * this.sensitivity,
-      main.scene.cameraPositionA.x += Math.sin(this.x) * this.sensitivity;
-    if (this.pressed.a) main.scene.cameraPositionA.z += Math.cos(this.x) * this.sensitivity,
-      main.scene.cameraPositionA.x -= Math.sin(this.x) * this.sensitivity;
 
-    if (this.pressed.s) main.scene.cameraPositionA.z -= Math.sin(this.x) * this.sensitivity,
-      main.scene.cameraPositionA.x += Math.cos(this.x) * this.sensitivity;
-    if (this.pressed.w) main.scene.cameraPositionA.z += Math.sin(this.x) * this.sensitivity,
-      main.scene.cameraPositionA.x -= Math.cos(this.x) * this.sensitivity;
-    
-    if (this.pressed.space) main.scene.cameraPositionA.y += this.a * this.sensitivity;
-    if (this.pressed.shift) main.scene.cameraPositionA.y -= this.a * this.sensitivity;
+    // if (this.pressed.d) main.scene.cameraPositionA.z -= Math.cos(this.x) * this.sensitivity,
+    //   main.scene.cameraPositionA.x += Math.sin(this.x) * this.sensitivity;
+    // if (this.pressed.a) main.scene.cameraPositionA.z += Math.cos(this.x) * this.sensitivity,
+    //   main.scene.cameraPositionA.x -= Math.sin(this.x) * this.sensitivity;
+
+    // if (this.pressed.s) main.scene.cameraPositionA.z -= Math.sin(this.x) * this.sensitivity,
+    //   main.scene.cameraPositionA.x += Math.cos(this.x) * this.sensitivity;
+    // if (this.pressed.w) main.scene.cameraPositionA.z += Math.sin(this.x) * this.sensitivity,
+    //   main.scene.cameraPositionA.x -= Math.cos(this.x) * this.sensitivity;
+
+    // if (this.pressed.a) main.scene.cameraPositionA.z -= Math.sin(this.x + Math.PI / 2) * this.sensitivity,
+    //   main.scene.cameraPositionA.x += Math.cos(this.x + Math.PI / 2) * this.sensitivity;
+    // if (this.pressed.d) main.scene.cameraPositionA.z += Math.sin(this.x + Math.PI / 2) * this.sensitivity,
+    //   main.scene.cameraPositionA.x -= Math.cos(this.x + Math.PI / 2) * this.sensitivity;
+
+    // if (this.pressed.space) main.scene.cameraPositionA.y += this.a * this.sensitivity;
+    // if (this.pressed.shift) main.scene.cameraPositionA.y -= this.a * this.sensitivity;
+
+    main.scene.actionCameraMove(this.pressed, this.a, this.sensitivity);
 
   }
 };

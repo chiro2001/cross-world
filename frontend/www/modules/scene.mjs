@@ -20,14 +20,14 @@ export class Scene {
     // }); //材质对象Material
     // this.mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
     this.mesh = new THREE.Mesh(
-      new THREE.SphereBufferGeometry(1, 16, 8),
+      new THREE.SphereBufferGeometry(1, 32, 32),
       new THREE.MeshBasicMaterial({ color: 0xFFFF00, wireframe: true })
     );
     this.mesh.position.set(0, 0, 0);
     this.scene.add(this.mesh); //网格模型添加到场景中
     this.mesh2 = new THREE.Mesh(
-      new THREE.SphereBufferGeometry(0.05, 16, 8),
-      new THREE.MeshBasicMaterial({ color: 0x00FFFF, wireframe: true })
+      new THREE.SphereBufferGeometry(0.01, 32, 32),
+      new THREE.MeshBasicMaterial({ color: 0x00FFFF, wireframe: false })
     );
     this.mesh2.position.set(0, 0, 0);
     this.scene.add(this.mesh2); //网格模型添加到场景中
@@ -44,7 +44,8 @@ export class Scene {
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(width, height);//设置渲染区域尺寸
-    this.renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
+    // this.renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
+    this.renderer.setClearColor(0x0, 1); //设置背景颜色
     // $(this.elem).html(this.renderer.domElement);
     this.elem.appendChild(this.renderer.domElement);
     this.setSize(width, height);
@@ -77,10 +78,32 @@ export class Scene {
     this.renderEnable = false;
   }
 
+  getLookDirection() {
+    return new THREE.Vector3().setFromSphericalCoords(1, -this.cameraRoll.y, -this.cameraRoll.x).add(this.camera.position);
+  }
+
+  actionCameraMove(pressed, a = 0.3, sensitivity = 0.02) {
+    let lookDirection = new THREE.Vector3().setFromSphericalCoords(1, -this.cameraRoll.y, -this.cameraRoll.x);
+    let lookDirectionL = new THREE.Vector3().setFromSphericalCoords(1, -this.cameraRoll.y, -this.cameraRoll.x + Math.PI / 2);
+    lookDirection.setY(0);
+    lookDirectionL.setY(0);
+    lookDirection.multiplyScalar(1 / (Math.sqrt(lookDirection.x * lookDirection.x + lookDirection.z * lookDirection.z) + 0.0000001));
+    lookDirectionL.multiplyScalar(1 / (Math.sqrt(lookDirectionL.x * lookDirectionL.x + lookDirectionL.z * lookDirectionL.z) + 0.0000001));
+    if (pressed.space) this.cameraPositionA.y += a * sensitivity;
+    if (pressed.shift) this.cameraPositionA.y -= a * sensitivity;
+    // if (pressed.w) this.cameraPositionA.add(lookDirection.multiplyScalar(sensitivity));
+    // if (pressed.s) this.cameraPositionA.add(lookDirection.multiplyScalar(-sensitivity));
+    if (pressed.w) this.cameraPositionA.add(lookDirection.multiplyScalar(sensitivity));
+    if (pressed.s) this.cameraPositionA.add(lookDirection.multiplyScalar(-sensitivity));
+    if (pressed.a) this.cameraPositionA.add(lookDirectionL.multiplyScalar(sensitivity));
+    if (pressed.d) this.cameraPositionA.add(lookDirectionL.multiplyScalar(-sensitivity));
+  }
+
   render() {
     stats.begin();
     events.eventCall("onRender");
     this.renderer.render(this.scene, this.camera);//执行渲染操作
+
     // this.mesh.rotateY(0.01);//每次绕y轴旋转0.01弧度
     // this.camera.rotateZ(0.001);
     // this.camera.position.set(200, 500, this.pi); //设置相机位置
@@ -94,13 +117,23 @@ export class Scene {
     // this.camera.rotateY(-this.cameraRoll.x / 1000);
 
     // this.cameraRoll.set(0, 0);
-    this.camera.rotation.y = -this.cameraRoll.x;
-    this.camera.rotation.x = -this.cameraRoll.y;
-    this.mesh2.position.set(
-      Math.cos(-this.cameraRoll.y) * Math.cos(-this.cameraRoll.x),
-      Math.sin(-this.cameraRoll.y),
-      Math.sin(-this.cameraRoll.x));
+    // this.camera.rotation.y = -this.cameraRoll.x;
+
+    // this.camera.up.set(this.cameraPosition.x, this.cameraPosition.y + 1, this.cameraPosition.z);
+
+    // this.camera.rotation.y = -this.cameraRoll.x;
+    // this.camera.rotation.x = -this.cameraRoll.y;
+    // this.mesh2.position.set(
+    //   -Math.cos(-this.cameraRoll.y) * Math.cos(-this.cameraRoll.x),
+    //   -Math.sin(-this.cameraRoll.y),
+    //   -Math.sin(-this.cameraRoll.x));
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
+
+    let lookDirection = this.getLookDirection();
+    this.mesh2.position.copy(lookDirection);
+    // new THREE.Vector3().copy();
+    this.camera.lookAt(lookDirection);
+
     // this.camera.lookAt(new THREE.Vector3().set(
     //   this.cameraPosition.x - Math.cos(-this.cameraRoll.y) * Math.cos(-this.cameraRoll.x),
     //   this.cameraPosition.y - Math.sin(-this.cameraRoll.y),
@@ -109,7 +142,7 @@ export class Scene {
     this.cameraPosition.x += this.cameraPositionA.x;
     this.cameraPosition.y += this.cameraPositionA.y;
     this.cameraPosition.z += this.cameraPositionA.z;
-    let da = 0.02;
+    let da = 0.005;
     if (this.cameraPositionA.x >= da) this.cameraPositionA.x -= da;
     else if (this.cameraPositionA.x <= -da) this.cameraPositionA.x += da;
     else if (this.cameraPositionA.x >= -da && this.cameraPositionA.x <= da) this.cameraPositionA.x = 0;
