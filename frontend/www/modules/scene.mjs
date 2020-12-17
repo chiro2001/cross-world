@@ -94,17 +94,17 @@ export class Scene {
     // this.camera.rotateY(-this.cameraRoll.x / 1000);
 
     // this.cameraRoll.set(0, 0);
-    // this.camera.rotation.y = -this.cameraRoll.x;
-    // this.camera.rotation.x = -this.cameraRoll.y;
+    this.camera.rotation.y = -this.cameraRoll.x;
+    this.camera.rotation.x = -this.cameraRoll.y;
     this.mesh2.position.set(
       Math.cos(-this.cameraRoll.y) * Math.cos(-this.cameraRoll.x),
       Math.sin(-this.cameraRoll.y),
       Math.sin(-this.cameraRoll.x));
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
-    this.camera.lookAt(new THREE.Vector3().set(
-      this.cameraPosition.x - Math.cos(-this.cameraRoll.y) * Math.cos(-this.cameraRoll.x),
-      this.cameraPosition.y - Math.sin(-this.cameraRoll.y),
-      this.cameraPosition.z - Math.sin(-this.cameraRoll.x)));
+    // this.camera.lookAt(new THREE.Vector3().set(
+    //   this.cameraPosition.x - Math.cos(-this.cameraRoll.y) * Math.cos(-this.cameraRoll.x),
+    //   this.cameraPosition.y - Math.sin(-this.cameraRoll.y),
+    //   this.cameraPosition.z - Math.sin(-this.cameraRoll.x)));
     // this.camera.up.set(this.cameraPosition.x, this.cameraPosition.y + 1, this.cameraPosition.z);
     this.cameraPosition.x += this.cameraPositionA.x;
     this.cameraPosition.y += this.cameraPositionA.y;
