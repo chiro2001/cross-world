@@ -14,6 +14,8 @@ export class Motions {
     this.stateFullScreen = false;
     this.statePointLock = false;
 
+    this.pressedKeys = {};
+
     document.addEventListener("keydown", this.onKeyDown);
     document.addEventListener("keyup", this.onKeyUp);
     document.addEventListener("mousemove", this.onMouseMove);
@@ -73,12 +75,15 @@ export class Motions {
   }
 
   onKeyDown(event) {
+    if (this.pressedKeys[event.code]) return;
     // console.log('down', event);
+    this.pressedKeys[event.code] = event.code;
     events.eventCall("onKeyDown", [event]);
   }
 
   onKeyUp(event) {
     // console.log('up', event)
+    if (this.pressedKeys[event.code]) delete this.pressedKeys[event.code];
     events.eventCall("onKeyUp", [event]);
   }
 

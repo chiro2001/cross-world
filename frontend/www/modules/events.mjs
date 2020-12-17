@@ -54,9 +54,11 @@ export class Events {
     if (!listFunction) return;
     if (!args) args = [];
     for (let f of listFunction) {
-      (async function() {
-        f(...args);
-      })();
+      try {
+        (function () {
+          f(...args);
+        })();
+      } catch (err) { console.error(err); }
     }
   }
 
