@@ -76,17 +76,24 @@ export default class extends ModBase {
   onRender() {
     if (!this.trackStart) return;
     // console.log('onRender', this.pressed);
-    if (this.pressed.w) main.scene.cameraPositionA.z -= Math.cos(this.x) * this.sensitivity,
+    // if (this.pressed.w) main.scene.cameraPositionA.z -= Math.cos(this.x) * this.sensitivity,
+    //   main.scene.cameraPositionA.x += Math.sin(this.x) * this.sensitivity;
+    // if (this.pressed.s) main.scene.cameraPositionA.z += Math.cos(this.x) * this.sensitivity,
+    //   main.scene.cameraPositionA.x -= Math.sin(this.x) * this.sensitivity;
+    // if (this.pressed.d) main.scene.cameraPositionA.z -= Math.sin(this.x) * this.sensitivity,
+    //   main.scene.cameraPositionA.x += Math.cos(this.x) * this.sensitivity;
+    // if (this.pressed.a) main.scene.cameraPositionA.z += Math.sin(this.x) * this.sensitivity,
+    //   main.scene.cameraPositionA.x -= Math.cos(this.x) * this.sensitivity;
+    if (this.pressed.d) main.scene.cameraPositionA.z -= Math.cos(this.x) * this.sensitivity,
       main.scene.cameraPositionA.x += Math.sin(this.x) * this.sensitivity;
-    if (this.pressed.s) main.scene.cameraPositionA.z += Math.cos(this.x) * this.sensitivity,
+    if (this.pressed.a) main.scene.cameraPositionA.z += Math.cos(this.x) * this.sensitivity,
       main.scene.cameraPositionA.x -= Math.sin(this.x) * this.sensitivity;
-    if (this.pressed.d) main.scene.cameraPositionA.z -= Math.sin(this.x) * this.sensitivity,
+
+    if (this.pressed.s) main.scene.cameraPositionA.z -= Math.sin(this.x) * this.sensitivity,
       main.scene.cameraPositionA.x += Math.cos(this.x) * this.sensitivity;
-    if (this.pressed.a) main.scene.cameraPositionA.z += Math.sin(this.x) * this.sensitivity,
+    if (this.pressed.w) main.scene.cameraPositionA.z += Math.sin(this.x) * this.sensitivity,
       main.scene.cameraPositionA.x -= Math.cos(this.x) * this.sensitivity;
-    // if (this.pressed.s) main.scene.cameraPositionA.z += this.a;
-    // if (this.pressed.a) main.scene.cameraPositionA.x -= this.a;
-    // if (this.pressed.d) main.scene.cameraPositionA.x += this.a;
+    
     if (this.pressed.space) main.scene.cameraPositionA.y += this.a * this.sensitivity;
     if (this.pressed.shift) main.scene.cameraPositionA.y -= this.a * this.sensitivity;
 
