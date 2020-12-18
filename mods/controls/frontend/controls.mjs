@@ -1,5 +1,6 @@
 import ModBase from "../../base/frontend/base.mjs";
 import * as THREE from "../../../frontend/www/vector/threejs/R123/three.module.js";
+// import { events } from "../../../frontend/www/modules/events.mjs";
 export default class extends ModBase {
   modName = 'Controls';
   version = "0.0.1";
@@ -13,20 +14,24 @@ export default class extends ModBase {
       this.onInit, this.onExit, this.onMouseMove,
       this.onKeyDown, this.onKeyUp,
       this.onFullScreen, this.onMouseDown,
-      this.onRender
+      this.onRender, this.onTouchMove
     ]);
     this.trackStart = false;
-    this.x = 0;
-    this.y = 0;
+    this.x = THREE.MathUtils.degToRad(180);
+    this.y = THREE.MathUtils.degToRad(90);
     this.a = 0.3;
     this.sensitivity = 0.02;
+    this.sensitivityTouch = 3;
+    
     this.pressed = {
       w: false, s: false, a: false, d: false,
       shift: false, space: false
     }
   }
 
-  onInit() { }
+  onInit() {
+    main.scene.cameraRoll.set(this.x, this.y);
+  }
 
   onExit() { }
 
@@ -34,11 +39,18 @@ export default class extends ModBase {
     if (!this.trackStart) return;
     this.x += dx / (Math.PI * 300);
     this.y += dy / (Math.PI * 300);
-    if (this.y <= THREE.MathUtils.degToRad(0)) this.y = THREE.MathUtils.degToRad(0);
-    if (this.y >= THREE.MathUtils.degToRad(180)) this.y = THREE.MathUtils.degToRad(180);
+    if (this.y < THREE.MathUtils.degToRad(0.00001)) this.y = THREE.MathUtils.degToRad(0.00001);
+    if (this.y > THREE.MathUtils.degToRad(180 - 0.00001)) this.y = THREE.MathUtils.degToRad(180 - 0.00001);
     // console.log(this.x, this.y);
     main.scene.cameraRoll.set(this.x, this.y);
     // main.scene.cameraRoll.set(dx, dy);
+  }
+
+  onTouchMove(touches) {
+    if (!this.trackStart) return;
+    if (touches.length == 0) return;
+    // events.eventCall("onMouseMove", [touches[0].pageX, touches[0].pageY]);
+    this.onMouseMove(touches[0].pageX * this.sensitivityTouch, touches[0].pageY * this.sensitivityTouch);
   }
 
   onMouseDown(e) {
@@ -75,8 +87,8 @@ export default class extends ModBase {
 
   onFullScreen(flag) {
     this.trackStart = flag;
-    this.x = 0;
-    this.y = 0;
+    this.x = THREE.MathUtils.degToRad(180);
+    this.y = THREE.MathUtils.degToRad(90);
   }
 
   onRender() {

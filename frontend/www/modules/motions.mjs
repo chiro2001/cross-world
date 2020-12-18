@@ -4,10 +4,11 @@ import { events } from "./events.mjs";
 export class Motions {
   constructor(worldElem) {
     utils.binder([
-      'onKeyDown', 'onKeyUp', 'onMouseMove', 'onFullScreen', 'pointerLockChange', 
-      'pointerLockError', 'fullscreenChange', 'enterFullScreen', 'onMouseDown'
+      'onKeyDown', 'onKeyUp', 'onMouseMove', 'onFullScreen', 'pointerLockChange',
+      'pointerLockError', 'fullscreenChange', 'enterFullScreen', 'onMouseDown',
+      'onTouchMove', 'onTouchStart', 'onTouchEnd'
     ], this);
-    
+
     if (!worldElem) worldElem = document.querySelector("#world");
     this.worldElem = worldElem;
 
@@ -15,10 +16,14 @@ export class Motions {
     this.statePointLock = false;
 
     this.pressedKeys = {};
+    this.lastTouches = undefined;
 
     document.addEventListener("keydown", this.onKeyDown);
     document.addEventListener("keyup", this.onKeyUp);
     document.addEventListener("mousemove", this.onMouseMove);
+    document.addEventListener('touchmove', this.onTouchMove);
+    document.addEventListener('touchstart', this.onTouchStart);
+    document.addEventListener('touchend', this.onTouchEnd);
     $(document).mousedown(this.onMouseDown);
 
     utils.addEventsListener([
@@ -101,6 +106,49 @@ export class Motions {
 
   onMouseDown(event) {
     events.eventCall("onMouseDown", [event]);
+  }
+
+  onTouchStart(event) {
+    events.eventCall("onTouchStart", [event]);
+  }
+
+  onTouchMove(event) {
+    // event.preventDefault();
+    function copyTouches(touches) {
+      let copy = [];
+      for (let t of touches) {
+        let c = {};
+        for (let n in t)
+          if ((n.endsWith('X') || n.endsWith('Y')))
+            c[n] = t[n];
+        copy.push(c);
+      }
+      return copy;
+    }
+    let touchCopy = copyTouches(event.targetTouches);
+    if (!this.lastTouches) this.lastTouches = touchCopy;
+    if (this.lastTouches.length != touchCopy.length) {
+      this.lastTouches = touchCopy;
+      return;
+    }
+    // 深度拷贝
+    let delta = copyTouches(event.targetTouches);
+    // console.log("!", delta[0].pageX, delta[0].pageY);
+    // console.log("?", this.lastTouches[0].pageX, this.lastTouches[0].pageY);
+    for (let i = 0; i < delta.length; i++) {
+      for (let name in delta[i]) {
+        delta[i][name] -= this.lastTouches[i][name];
+      }
+    }
+    console.log(delta.length, delta[0].pageX, delta[0].pageY);
+    
+    this.lastTouches = touchCopy;
+    events.eventCall("onTouchMove", [delta]);
+  }
+
+  onTouchEnd(event) {
+    this.lastTouches = undefined;
+    events.eventCall("onTouchEnd", [event]);
   }
 
   onFullScreen() {

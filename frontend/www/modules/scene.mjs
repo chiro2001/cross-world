@@ -83,12 +83,14 @@ export class Scene {
   }
 
   actionCameraMove(pressed, a = 0.3, sensitivity = 0.02) {
-    let lookDirection = new THREE.Vector3().setFromSphericalCoords(1, -this.cameraRoll.y, -this.cameraRoll.x);
-    let lookDirectionL = new THREE.Vector3().setFromSphericalCoords(1, -this.cameraRoll.y, -this.cameraRoll.x + Math.PI / 2);
+    // let lookDirection = new THREE.Vector3().setFromSphericalCoords(1, -this.cameraRoll.y, -this.cameraRoll.x);
+    let lookDirection = new THREE.Vector3().setFromSphericalCoords(1, -Math.PI / 2, -this.cameraRoll.x);
+    let lookDirectionL = new THREE.Vector3().setFromSphericalCoords(1, -Math.PI / 2, -this.cameraRoll.x + Math.PI / 2);
+    // console.log(lookDirection, lookDirectionL);
     lookDirection.setY(0);
     lookDirectionL.setY(0);
-    lookDirection.multiplyScalar(1 / (Math.sqrt(lookDirection.x * lookDirection.x + lookDirection.z * lookDirection.z) + 0.0000001));
-    lookDirectionL.multiplyScalar(1 / (Math.sqrt(lookDirectionL.x * lookDirectionL.x + lookDirectionL.z * lookDirectionL.z) + 0.0000001));
+    // lookDirection.multiplyScalar(1 / (Math.sqrt(lookDirection.x * lookDirection.x + lookDirection.z * lookDirection.z) + 0.0000001));
+    // lookDirectionL.multiplyScalar(1 / (Math.sqrt(lookDirectionL.x * lookDirectionL.x + lookDirectionL.z * lookDirectionL.z) + 0.0000001));
     if (pressed.space) this.cameraPositionA.y += a * sensitivity;
     if (pressed.shift) this.cameraPositionA.y -= a * sensitivity;
     // if (pressed.w) this.cameraPositionA.add(lookDirection.multiplyScalar(sensitivity));
@@ -139,19 +141,22 @@ export class Scene {
     //   this.cameraPosition.y - Math.sin(-this.cameraRoll.y),
     //   this.cameraPosition.z - Math.sin(-this.cameraRoll.x)));
     // this.camera.up.set(this.cameraPosition.x, this.cameraPosition.y + 1, this.cameraPosition.z);
-    this.cameraPosition.x += this.cameraPositionA.x;
-    this.cameraPosition.y += this.cameraPositionA.y;
-    this.cameraPosition.z += this.cameraPositionA.z;
-    let da = 0.005;
-    if (this.cameraPositionA.x >= da) this.cameraPositionA.x -= da;
-    else if (this.cameraPositionA.x <= -da) this.cameraPositionA.x += da;
-    else if (this.cameraPositionA.x >= -da && this.cameraPositionA.x <= da) this.cameraPositionA.x = 0;
-    if (this.cameraPositionA.y >= da) this.cameraPositionA.y -= da;
-    else if (this.cameraPositionA.y <= -da) this.cameraPositionA.y += da;
-    else if (this.cameraPositionA.y >= -da && this.cameraPositionA.y <= da) this.cameraPositionA.y = 0;
-    if (this.cameraPositionA.z >= da) this.cameraPositionA.z -= da;
-    else if (this.cameraPositionA.z <= -da) this.cameraPositionA.z += da;
-    else if (this.cameraPositionA.z >= -da && this.cameraPositionA.z <= da) this.cameraPositionA.z = 0;
+    // this.cameraPosition.x += this.cameraPositionA.x;
+    // this.cameraPosition.y += this.cameraPositionA.y;
+    // this.cameraPosition.z += this.cameraPositionA.z;
+    this.cameraPosition.add(this.cameraPositionA);
+    let da = 0.9;
+    // if (this.cameraPositionA.x >= da) this.cameraPositionA.x -= da;
+    // else if (this.cameraPositionA.x <= -da) this.cameraPositionA.x += da;
+    // else if (this.cameraPositionA.x >= -da && this.cameraPositionA.x <= da) this.cameraPositionA.x = 0;
+    // if (this.cameraPositionA.y >= da) this.cameraPositionA.y -= da;
+    // else if (this.cameraPositionA.y <= -da) this.cameraPositionA.y += da;
+    // else if (this.cameraPositionA.y >= -da && this.cameraPositionA.y <= da) this.cameraPositionA.y = 0;
+    // if (this.cameraPositionA.z >= da) this.cameraPositionA.z -= da;
+    // else if (this.cameraPositionA.z <= -da) this.cameraPositionA.z += da;
+    // else if (this.cameraPositionA.z >= -da && this.cameraPositionA.z <= da) this.cameraPositionA.z = 0;
+
+    this.cameraPositionA.multiplyScalar(da);
     if (this.renderEnable)
       // this.camera.lookAt(this.scene.position);
       // console.log(this.camera.position);

@@ -32,10 +32,12 @@ export class Main {
     console.log('onFullScreen', flag);
     if (flag) {
       setTimeout(() => {
+        document.body.style.zoom = 0.5;
         this.scene.setSize($(this.scene.elem).width(), $(this.scene.elem).height());
         // console.log("done", this.motions.eventListeners);
       }, 300);
     } else {
+      document.body.style.zoom = 1;
       this.scene.setSize(200, 200);
     }
   }
